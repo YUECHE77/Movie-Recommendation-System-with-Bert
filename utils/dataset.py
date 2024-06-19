@@ -1,7 +1,7 @@
 from torch.utils.data import Dataset
 
 
-class SBert_Dataset(Dataset):
+class SBertDataset(Dataset):
     def __init__(self, data):
         self.data = data
 

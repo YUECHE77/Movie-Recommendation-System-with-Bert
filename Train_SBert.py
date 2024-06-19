@@ -16,15 +16,16 @@ if __name__ == "__main__":
     movies_small_path = 'dataset/movies_5000.csv'
     ratings_for_history_path = 'dataset/ratings_for_history.csv'
     ratings_for_history_small_path = 'dataset/ratings_for_history_small.csv'
-
     # ----------------------------------------------------#
     #   Training parameters
-    #   epoch_num       Epoch number
-    #   batch_size      Batch size
-    #   warm_up         Training warm up
-    #   eval_steps      Steps to evaluate the model
-    #   lr              Learning rate
-    #   output_path     Where do you save your model
+    #   epoch_num           Epoch number
+    #   batch_size          Batch size
+    #   warm_up             Training warm up
+    #   eval_steps          Steps to evaluate the model
+    #   lr                  Learning rate
+    #   output_path         Where do you save your model
+
+    #   pretrained_model    Which model you want to use
     # ----------------------------------------------------#
     epoch_num = 1
     batch_size = 16
@@ -33,6 +34,7 @@ if __name__ == "__main__":
     lr = 1e-6
     output_path = 'logs/Sentence_Bert/training_nli_distilbert-model'
 
+    pretrained_model = 'distilbert-base-nli-mean-tokens'
     # ----------------------------------------------------#
     #   Read in the data
     # ----------------------------------------------------#
@@ -40,24 +42,21 @@ if __name__ == "__main__":
                                                                                             movies_small_path,
                                                                                             ratings_for_history_path,
                                                                                             ratings_for_history_small_path)
-
     # ----------------------------------------------------#
     #   Generate data points for training and validation
     # ----------------------------------------------------#
     examples_train = SBert.generate_data(movies_=movies, num=100)
     examples_val = SBert.generate_data(movies_=movies, num=30)
-
     # ----------------------------------------------------#
     #   Load training data and get the evaluator
     # ----------------------------------------------------#
     train_loader = SBert.load_dataset(examples_train, batch_size=batch_size)
     evaluator = SBert.get_evaluator(examples_val, 'evaluator1')
-
     # ----------------------------------------------------#
     #   Load the model and put it on GPU
     # ----------------------------------------------------#
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-    model = SentenceTransformer('distilbert-base-nli-mean-tokens').to(device)
+    model = SentenceTransformer(pretrained_model).to(device)
 
     # ----------------------------------------------------#
     #   Set up logging
@@ -66,7 +65,6 @@ if __name__ == "__main__":
                         datefmt='%Y-%m-%d %H:%M:%S',
                         level=logging.INFO,
                         handlers=[LoggingHandler()])
-
     # ----------------------------------------------------#
     #   The loss function -> call it train_loss
     # ----------------------------------------------------#
@@ -75,6 +73,8 @@ if __name__ == "__main__":
     # ----------------------------------------------------#
     #   Fit the model
     # ----------------------------------------------------#
+    print('\nStart Training!!!\n')
+
     model.fit(
         train_objectives=[(train_loader, train_loss)],
         evaluator=evaluator,
@@ -86,4 +86,4 @@ if __name__ == "__main__":
         output_path=output_path
     )
 
-    print('Finished Training')
+    print('\nFinished Training!!!\n')

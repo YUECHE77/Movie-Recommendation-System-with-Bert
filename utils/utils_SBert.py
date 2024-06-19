@@ -4,7 +4,7 @@ import numpy as np
 from torch.utils.data import DataLoader
 
 from sentence_transformers import InputExample, evaluation
-from .dataset import SBert_Dataset
+from .dataset import SBertDataset
 
 
 def read_in_csv(movies_all_path, movies_small_path, ratings_for_history_path, ratings_for_history_small_path):
@@ -84,7 +84,7 @@ def generate_data(movies_, num=100):
 
 def load_dataset(examples, batch_size):
     """Load the dataset -> get train loader"""
-    my_dataset = SBert_Dataset(examples)
+    my_dataset = SBertDataset(examples)
     train_loader = DataLoader(my_dataset, batch_size=batch_size, shuffle=True)
 
     return train_loader
