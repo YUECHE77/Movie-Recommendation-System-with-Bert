@@ -1,18 +1,13 @@
-from transformers import BertTokenizer
 import torch
 import torch.nn as nn
-import numpy as np
-import pandas as pd
+
+from transformers import BertTokenizer
 from transformers import BertModel
-from sklearn.preprocessing import LabelEncoder
-from torch.utils.data import DataLoader, random_split, TensorDataset
+
 import utils.utils_CosBert as CosBert
 from net.MovieClassifier import MovieClassifier
-from sklearn.model_selection import train_test_split
+
 from tqdm import tqdm
-import argparse
-import os
-import glob
 
 
 if __name__ == '__main__':
